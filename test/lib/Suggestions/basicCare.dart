@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -37,29 +36,30 @@ class BasicCare extends StatelessWidget {
                 height: 20.0,
               ),
               ProductTextField(
-                lebelText: 'Hydration Product Name',
+                labelText: 'Hydration Product Name',
                 textEditingController: hydrationController,
               ),
               SizedBox(
                 height: 20.0,
               ),
               ProductTextField(
-                lebelText: 'Nutrition Product Name',
+                labelText: 'Nutrition Product Name',
                 textEditingController: nutritionController,
               ),
               SizedBox(
                 height: 20.0,
               ),
               ProductTextField(
-                lebelText: 'Reconstruction Product Name',
+                labelText: 'Reconstruction Product Name',
                 textEditingController: reconstructionController,
               ),
               SizedBox(
                 height: 20.0,
               ),
               ProductTextField(
-                lebelText: 'Total',
+                labelText: 'Total',
                 textEditingController: totalController,
+                keyboardType: TextInputType.number,
               ),
               SizedBox(
                 height: 20.0,
@@ -256,23 +256,29 @@ class SubmitButton extends StatelessWidget {
 }
 
 class ProductTextField extends StatelessWidget {
-  final String lebelText;
+  final String labelText;
+  final TextEditingController textEditingController;
+  final TextInputType keyboardType;
 
   const ProductTextField({
     super.key,
-    required this.lebelText,
+    required this.labelText,
     required this.textEditingController,
+    this.keyboardType = TextInputType.text,
   });
-  final TextEditingController textEditingController;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: textEditingController,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
-        labelText: lebelText,
+        labelText: labelText,
         labelStyle: TextStyle(
-            color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),
+          color: Colors.grey,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
         ),

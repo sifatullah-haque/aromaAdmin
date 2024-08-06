@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:test/services/firestore.dart';
 import 'package:test/stateManager/stateManager.dart';
@@ -34,50 +32,43 @@ class CompleteCare extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
-              SizedBox(
-                height: 20.0,
-              ),
+              SizedBox(height: 20.0),
               ProductTextField(
-                lebelText: 'Hydration Product Name',
+                labelText: 'Hydration Product Name',
                 textEditingController: hydrationController,
               ),
-              SizedBox(
-                height: 20.0,
-              ),
+              SizedBox(height: 20.0),
               ProductTextField(
-                lebelText: 'Nutrition Product Name',
+                labelText: 'Nutrition Product Name',
                 textEditingController: nutritionController,
               ),
-              SizedBox(
-                height: 20.0,
-              ),
+              SizedBox(height: 20.0),
               ProductTextField(
-                lebelText: 'Reconstruction Product Name',
+                labelText: 'Reconstruction Product Name',
                 textEditingController: reconstructionController,
               ),
-              SizedBox(
-                height: 20.0,
-              ),
+              SizedBox(height: 20.0),
               ProductTextField(
-                lebelText: 'Total',
+                labelText: 'Total',
                 textEditingController: totalController,
+                keyboardType: TextInputType.number,
               ),
-              SizedBox(
-                height: 20.0,
-              ),
+              SizedBox(height: 20.0),
               Container(
-                  width: double.infinity,
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade700,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: SubmitButton(
-                      stateManager: stateManager,
-                      hydrationController: hydrationController,
-                      nutritionController: nutritionController,
-                      reconstructionController: reconstructionController,
-                      totalController: totalController)),
+                width: double.infinity,
+                height: 50.0,
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade700,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: SubmitButton(
+                  stateManager: stateManager,
+                  hydrationController: hydrationController,
+                  nutritionController: nutritionController,
+                  reconstructionController: reconstructionController,
+                  totalController: totalController,
+                ),
+              ),
               const SizedBox(height: 20.0),
               Container(
                 height: MediaQuery.of(context).size.height *
@@ -128,61 +119,54 @@ class ListViewDetails extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: ListTile(
-                      trailing: GestureDetector(
-                        onTap: () => firestoreService.deleteCompleteCare(docID),
-                        child: Icon(
-                          Icons.delete_rounded,
-                          color: Colors.orange,
-                        ),
+                    trailing: GestureDetector(
+                      onTap: () => firestoreService.deleteCompleteCare(docID),
+                      child: Icon(
+                        Icons.delete_rounded,
+                        color: Colors.orange,
                       ),
-                      // title: Text(
-                      //   hydrationName,
-                      //   style: TextStyle(
-                      //     fontSize: 18.0,
-                      //   ),
-                      //   textAlign: TextAlign.justify,
-                      // ),
-
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            hydrationName,
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.grey,
-                            ),
-                            textAlign: TextAlign.justify,
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          hydrationName,
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
                           ),
-                          Divider(),
-                          Text(
-                            nutrationName,
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.grey,
-                            ),
-                            textAlign: TextAlign.justify,
+                          textAlign: TextAlign.justify,
+                        ),
+                        Divider(),
+                        Text(
+                          nutrationName,
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
                           ),
-                          Divider(),
-                          Text(
-                            reconstructName,
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.grey,
-                            ),
-                            textAlign: TextAlign.justify,
+                          textAlign: TextAlign.justify,
+                        ),
+                        Divider(),
+                        Text(
+                          reconstructName,
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
                           ),
-                          Divider(),
-                          Text(
-                            total,
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.grey,
-                            ),
-                            textAlign: TextAlign.justify,
+                          textAlign: TextAlign.justify,
+                        ),
+                        Divider(),
+                        Text(
+                          total,
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
                           ),
-                        ],
-                      )),
+                          textAlign: TextAlign.justify,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               );
             },
@@ -220,10 +204,11 @@ class SubmitButton extends StatelessWidget {
 
         // Call submitCode method from StateManager
         await stateManager.submitCompleteCare(
-            hydrationController.text,
-            nutritionController.text,
-            reconstructionController.text,
-            totalController.text);
+          hydrationController.text,
+          nutritionController.text,
+          reconstructionController.text,
+          totalController.text,
+        );
 
         if (!stateManager.isLoading && stateManager.errorMessage == null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -257,23 +242,29 @@ class SubmitButton extends StatelessWidget {
 }
 
 class ProductTextField extends StatelessWidget {
-  final String lebelText;
+  final String labelText;
+  final TextEditingController textEditingController;
+  final TextInputType keyboardType;
 
   const ProductTextField({
     super.key,
-    required this.lebelText,
+    required this.labelText,
     required this.textEditingController,
+    this.keyboardType = TextInputType.text,
   });
-  final TextEditingController textEditingController;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: textEditingController,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
-        labelText: lebelText,
+        labelText: labelText,
         labelStyle: TextStyle(
-            color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),
+          color: Colors.grey,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
         ),

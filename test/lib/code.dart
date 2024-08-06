@@ -45,9 +45,13 @@ class _CodeState extends State<Code> {
                 ),
               ),
             SubmitButton(
-                stateManager: stateManager, codeController: codeController),
+              stateManager: stateManager,
+              codeController: codeController,
+            ),
             SizedBox(height: 20.0),
-            ListViewDetails(firestoreService: firestoreService)
+            Expanded(
+              child: ListViewDetails(firestoreService: firestoreService),
+            ),
           ],
         ),
       ),
@@ -65,55 +69,58 @@ class ListViewDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      // Ensure the ListView expands to use available space
-      child: Container(
-        width: double.infinity,
-        child: StreamBuilder(
-          stream: firestoreService.getCodes(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List codeList = snapshot.data!.docs;
-              return ListView.builder(
-                itemCount: codeList.length, // Ensure itemCount is set
-                itemBuilder: (context, index) {
-                  DocumentSnapshot documents = codeList[index];
-                  String docID = documents.id;
-                  Map<String, dynamic> data =
-                      documents.data() as Map<String, dynamic>;
+    return Container(
+      width: double.infinity,
+      child: StreamBuilder(
+        stream: firestoreService.getCodes(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<DocumentSnapshot> codeList = snapshot.data!.docs;
+            print('Code list: $codeList'); // Debug print
 
-                  String noteText = data['code'];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: ListTile(
-                        trailing: GestureDetector(
-                          onTap: () => firestoreService.deleteCode(docID),
-                          child: Icon(
-                            Icons.delete_rounded,
-                            color: Colors.orange,
-                          ),
+            return ListView.builder(
+              itemCount: codeList.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot document = codeList[index];
+                String docID = document.id;
+                Map<String, dynamic> data =
+                    document.data() as Map<String, dynamic>;
+
+                String noteText =
+                    data['name'] ?? 'No Code Found'; // Corrected field name
+
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: ListTile(
+                      trailing: GestureDetector(
+                        onTap: () => firestoreService.deleteCode(docID),
+                        child: Icon(
+                          Icons.delete_rounded,
+                          color: Colors.orange,
                         ),
-                        title: Text(
-                          noteText,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                          ),
+                      ),
+                      title: Text(
+                        noteText,
+                        style: TextStyle(
+                          fontSize: 18.0,
                         ),
                       ),
                     ),
-                  );
-                },
-              );
-            } else {
-              return const Text("No Code Found");
-            }
-          },
-        ),
+                  ),
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return const Text("Error loading codes");
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }
@@ -133,12 +140,8 @@ class SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        // Unfocus the TextField to dismiss the keyboard
         FocusScope.of(context).unfocus();
-
-        // Call submitCode method from StateManager
         await stateManager.submitCode(codeController.text);
-
         if (!stateManager.isLoading && stateManager.errorMessage == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
