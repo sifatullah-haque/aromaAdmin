@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "853709775123",
+    "project_id": "arotest-ead9e",
+    "storage_bucket": "arotest-ead9e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853709775123:android:704c49ccf5149ba69ffae6",
+        "android_client_info": {
+          "package_name": "com.example.test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhtH7UvdUnRIGiLBwiiozz9sOM17yJM4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853709775123:android:9867227afec18d7c9ffae6",
+        "android_client_info": {
+          "package_name": "com.fbase.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhtH7UvdUnRIGiLBwiiozz9sOM17yJM4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
